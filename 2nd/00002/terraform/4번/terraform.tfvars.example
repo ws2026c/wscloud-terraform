@@ -1,0 +1,16 @@
+# cp terraform.tfvars.example terraform.tfvars
+# S3 버킷 이름이 wsc2026-sensor-alert-bucket-<비번호> 이므로 비번호가 필수입니다.
+
+region         = "ap-northeast-1"
+student_number = "111"
+
+# 문제지 서브넷 이름이 a / d 이므로 기본값은 1a / 1d 입니다.
+# azs = ["ap-northeast-1a", "ap-northeast-1d"]
+
+# 채점 4-2 는 python3.14 를 기대합니다.
+# 계정/리전에서 아직 지원하지 않아 apply 가 실패하면 아래를 활성화하세요.
+# lambda_runtime = "python3.13"
+
+# Lambda 가 alert 토픽으로 produce 하기 위한 kafka 레이어를 EC2 가 빌드합니다.
+# 필요 없으면 false.
+# build_lambda_kafka_layer = true

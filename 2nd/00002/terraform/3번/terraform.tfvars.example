@@ -1,0 +1,7 @@
+# cp terraform.tfvars.example terraform.tfvars
+# S3 버킷(CloudTrail / Config)은 전역 고유 이름이 필요해서 비번호를 씁니다.
+
+region         = "eu-west-1"
+student_number = "111"
+
+# azs = ["eu-west-1a", "eu-west-1b"]

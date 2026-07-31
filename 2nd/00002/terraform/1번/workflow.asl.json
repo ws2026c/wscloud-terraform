@@ -1,0 +1,132 @@
+{
+  "Comment": "wsc2026 student score processing workflow",
+  "StartAt": "CheckS3File",
+  "States": {
+    "CheckS3File": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:s3:headObject",
+      "Parameters": {
+        "Bucket": "${bucket_name}",
+        "Key.$": "$.key"
+      },
+      "ResultPath": null,
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "FileNotFound"
+        }
+      ],
+      "Next": "ProcessStudentData"
+    },
+
+    "ProcessStudentData": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${process_lambda_arn}",
+        "Payload": {
+          "key.$": "$.key"
+        }
+      },
+      "ResultSelector": {
+        "statusCode.$": "$.Payload.statusCode",
+        "processed.$": "$.Payload.processed",
+        "errors.$": "$.Payload.errors"
+      },
+      "ResultPath": "$.result",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException",
+            "States.TaskFailed"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "MoveToError"
+        }
+      ],
+      "Next": "CheckResult"
+    },
+
+    "CheckResult": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.result.statusCode",
+          "NumericEquals": 200,
+          "Next": "MoveToProcessed"
+        }
+      ],
+      "Default": "MoveToError"
+    },
+
+    "MoveToProcessed": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:s3:copyObject",
+      "Parameters": {
+        "Bucket": "${bucket_name}",
+        "CopySource.$": "States.Format('${bucket_name}/{}', $.key)",
+        "Key.$": "States.Format('processed/{}', States.ArrayGetItem(States.StringSplit($.key, '/'), 1))"
+      },
+      "ResultPath": null,
+      "Next": "DeleteInputAfterProcessed"
+    },
+
+    "DeleteInputAfterProcessed": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:s3:deleteObject",
+      "Parameters": {
+        "Bucket": "${bucket_name}",
+        "Key.$": "$.key"
+      },
+      "ResultPath": null,
+      "End": true
+    },
+
+    "MoveToError": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:s3:copyObject",
+      "Parameters": {
+        "Bucket": "${bucket_name}",
+        "CopySource.$": "States.Format('${bucket_name}/{}', $.key)",
+        "Key.$": "States.Format('error/{}', States.ArrayGetItem(States.StringSplit($.key, '/'), 1))"
+      },
+      "ResultPath": null,
+      "Next": "DeleteInputAfterError"
+    },
+
+    "DeleteInputAfterError": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:s3:deleteObject",
+      "Parameters": {
+        "Bucket": "${bucket_name}",
+        "Key.$": "$.key"
+      },
+      "ResultPath": null,
+      "Next": "WorkflowFailed"
+    },
+
+    "WorkflowFailed": {
+      "Type": "Fail",
+      "Error": "StudentScoreProcessingFailed",
+      "Cause": "Lambda processing failed or returned a non-200 statusCode."
+    },
+
+    "FileNotFound": {
+      "Type": "Fail",
+      "Error": "InputFileNotFound",
+      "Cause": "Input CSV file does not exist in the S3 input/ prefix."
+    }
+  }
+}

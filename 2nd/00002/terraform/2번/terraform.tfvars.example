@@ -1,0 +1,11 @@
+# cp terraform.tfvars.example terraform.tfvars
+# 2과제는 리소스 이름이 모두 고정이라 비번호 입력이 필요 없습니다.
+
+region = "ap-northeast-2"
+
+# ALB 는 2개 AZ 가 필요합니다. 계정에서 사용 가능한 AZ 로 조정하세요.
+azs = ["ap-northeast-2a", "ap-northeast-2c"]
+
+# 문제지 IAM 표기에 오타('alaytics')가 있어 원문 그대로 사용합니다.
+# 문제지가 정정되면 아래를 wsc2026-analytics-ec2-role 로 바꾸세요.
+# ec2_role_name = "wsc2026-alaytics-ec2-role"
