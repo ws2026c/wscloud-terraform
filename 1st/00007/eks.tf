@@ -62,9 +62,46 @@ resource "aws_iam_role_policy_attachment" "eks_nodes_AmazonSSMManagedInstanceCor
   role       = aws_iam_role.eks_nodes.name
 }
 
+resource "aws_launch_template" "eks_nodes_addon" {
+  name_prefix = "unicorn-eks-node-addon-lt-"
+  description = "Launch template for EKS Addon nodes"
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 2
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "unicorn-k8snode-addon-node"
+    }
+  }
+
+  user_data = base64encode(<<-EOF
+    MIME-Version: 1.0
+    Content-Type: multipart/mixed; boundary="==MYBOUNDARY=="
+
+    --==MYBOUNDARY==
+    Content-Type: text/x-shellscript; charset="us-ascii"
+
+    #!/bin/bash
+    timedatectl set-timezone Asia/Seoul
+
+    --==MYBOUNDARY==--
+  EOF
+  )
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_launch_template" "eks_nodes_app" {
-  name_prefix   = "unicorn-eks-node-app-lt-"
-  description   = "Launch template for EKS Bottlerocket App nodes"
+  name_prefix = "unicorn-eks-node-app-lt-"
+  description = "Launch template for EKS App nodes"
 
   metadata_options {
     http_endpoint               = "enabled"
@@ -80,28 +117,19 @@ resource "aws_launch_template" "eks_nodes_app" {
     }
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+  user_data = base64encode(<<-EOF
+    MIME-Version: 1.0
+    Content-Type: multipart/mixed; boundary="==MYBOUNDARY=="
 
-resource "aws_launch_template" "eks_nodes_addon" {
-  name_prefix   = "unicorn-eks-node-addon-lt-"
-  description   = "Launch template for EKS Bottlerocket Addon nodes"
+    --==MYBOUNDARY==
+    Content-Type: text/x-shellscript; charset="us-ascii"
 
-  metadata_options {
-    http_endpoint               = "enabled"
-    http_tokens                 = "required"
-    http_put_response_hop_limit = 2
-  }
+    #!/bin/bash
+    timedatectl set-timezone Asia/Seoul
 
-  tag_specifications {
-    resource_type = "instance"
-
-    tags = {
-      Name = "unicorn-k8snode-addon-node"
-    }
-  }
+    --==MYBOUNDARY==--
+  EOF
+  )
 
   lifecycle {
     create_before_destroy = true
@@ -171,7 +199,7 @@ resource "aws_eks_node_group" "addon" {
   node_role_arn   = aws_iam_role.eks_nodes.arn
   subnet_ids      = aws_subnet.private[*].id
 
-  ami_type       = "BOTTLEROCKET_x86_64"
+  ami_type       = "AL2023_x86_64_STANDARD"
   instance_types = ["t3.medium"]
 
   scaling_config {
@@ -206,7 +234,7 @@ resource "aws_eks_node_group" "app" {
   node_role_arn   = aws_iam_role.eks_nodes.arn
   subnet_ids      = aws_subnet.private[*].id
 
-  ami_type       = "BOTTLEROCKET_x86_64"
+  ami_type       = "AL2023_x86_64_STANDARD"
   instance_types = ["t3.medium"]
 
   scaling_config {
