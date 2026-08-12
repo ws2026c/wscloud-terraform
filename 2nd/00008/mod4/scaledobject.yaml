@@ -1,0 +1,29 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: sqs-worker-trigger-auth
+  namespace: skills-sqs
+spec:
+  podIdentity:
+    provider: aws-eks
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: sqs-worker-scaledobject
+  namespace: skills-sqs
+spec:
+  scaleTargetRef:
+    name: sqs-worker
+  minReplicaCount: 0
+  maxReplicaCount: 6
+  pollingInterval: 15
+  cooldownPeriod: 30
+  triggers:
+    - type: aws-sqs-queue
+      authenticationRef:
+        name: sqs-worker-trigger-auth
+      metadata:
+        queueURL: "https://sqs.us-west-2.amazonaws.com/000000000000/skills-sqs-queue"
+        queueLength: "2"
+        awsRegion: "us-west-2"
