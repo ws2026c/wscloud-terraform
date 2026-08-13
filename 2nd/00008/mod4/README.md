@@ -29,7 +29,7 @@ eksctl create iamserviceaccount \
   --cluster=${CLUSTER_NAME} \
   --namespace=keda \
   --name=keda-operator \
-  --role-name "${CLUSTER_NAME}-keda"
+  --role-name "${CLUSTER_NAME}-keda" \
   --attach-policy-arn=arn:aws:iam::aws:policy/AmazonSQSFullAccess \
   --approve
 ```
@@ -95,7 +95,7 @@ eksctl create iamserviceaccount \
   --cluster=${CLUSTER_NAME} \
   --namespace=skills-sqs \
   --name=sqs-worker-sa \
-  --role-name "${CLUSTER_NAME}-sqs-worker"
+  --role-name "${CLUSTER_NAME}-sqs-worker" \
   --attach-policy-arn=arn:aws:iam::$AWS_ACCOUNT_ID:policy/skills-sqs-worker-policy \
   --approve \
   --region=us-west-2
@@ -141,8 +141,8 @@ helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter \
 ```
 
 8. 파드의 보안 그룹(클러스터 보안그룹) 및 프라이빗 서브넷에 다음 태그 삽입
-키 : karpenter.sh/discovery
-값 : skills-sqs-cluster
+- 키 : karpenter.sh/discovery
+- 값 : skills-sqs-cluster
 
 9. 각 Yaml 적용
 - 9-1. deployment.yaml 생성 및 적용
