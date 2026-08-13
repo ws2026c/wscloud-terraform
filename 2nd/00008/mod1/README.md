@@ -29,7 +29,7 @@
 10. 엔진버전은 기본값인 5.0.0, 인스턴스 개수는 1대만 유지해도 무방
 10-1. KMS 생성의 경우 별칭에 alias/ 를 포함하지 말 것. 
 11. 인스턴스 이름은 생성 이후에 변경 가능 / 인증 정보의 경우 Self managed
-12. DocumentDB 콘솔에서 global_bundle.pem을 다운로드 할 수 있으며 이것도 /opt/skills-nosql/ 에 옮기기
+12. DocumentDB 콘솔에서 global_bundle.pem을 curl로 다운로드 할 수 있으며 이것도 /opt/skills-nosql/ 에 옮기기
 13. Secret Manager 먼저 생성
 14. /opt/skills-nosql/ 로 가서 `python3 docdb_client.py seed` 를 실행하여 데이터 적재
 15. 아래 파이썬 파일을 저장 후 실행 (데이터 구조를 변경할 임시 스크립트이므로 사용 후 삭제)
