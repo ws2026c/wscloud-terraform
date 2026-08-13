@@ -7,7 +7,7 @@
 5. 아래 명령어로 파이썬 설치
    - sudo dnf install -y python3-pip
    - sudo python3 -m pip install pymongo boto3
-7. Systemd로 서비스 구성 (enable 시키기,  경로 : /etc/systemd/system/skills.service)
+7. Systemd로 서비스 구성 (start & enable 시키기,  경로 : /etc/systemd/system/skills.service)
    ```toml
    [Unit]
    Description=skills
