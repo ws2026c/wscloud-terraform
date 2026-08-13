@@ -3,11 +3,11 @@
 ## 2) CDN Function (us-east-1)
 - 리전 변경 (us-east-1, 버지니아 북부.)
 
-1. CND 구성
+1. CDN 구성
     - S3 Bucket Name : skillsphone-landing-ab-<ACCOUNT_ID 12자리>
     - index_a.html 파일 업로드 : /version-a/index.html
     - index_b.html 파일 업로드 : /version-b/index.html \
-    버킷 버전 관리 활성화    
+    버킷 버전 관리 활성화 및 버킷 정책에서 Condition의 ArnLike 부분을 StringEquals로 바꿔주기    
 ### index_a.html과 index_b.html의 파일 이름을 index.html로 각각 폴더에 넣어주기
 
 2. KeyValueStore 구성
