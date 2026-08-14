@@ -1,0 +1,30 @@
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: skm-app-nodepool
+spec:
+  template:
+    metadata:
+      labels:
+        nodepool: skm-app-nodepool
+    spec:
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: skm-app-nodeclass
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+        - key: node.kubernetes.io/instance-type
+          operator: In
+          values: ["t3.small", "t3.medium"]
+      taints:
+        - key: "node"
+          value: "app"
+          effect: NoSchedule
+  disruption:
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 60s
+  limits:
+    cpu: "1000"
