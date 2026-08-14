@@ -54,7 +54,7 @@
         --set serviceAccount.webhooks.create=false \
         --set "tolerations[0].key=CriticalAddonsOnly" \
         --set "tolerations[0].operator=Exists" \
-        --set "tolerations[0].effect=NoSchedule" \
+        --set "tolerations[0].effect=NoSchedule"
         ```
     - Karpenter 설치
     
