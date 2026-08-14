@@ -55,7 +55,6 @@
         --set "tolerations[0].key=CriticalAddonsOnly" \
         --set "tolerations[0].operator=Exists" \
         --set "tolerations[0].effect=NoSchedule" \
-        --set-string "nodeSelector.CriticalAddonsOnly=true"
         ```
     - Karpenter 설치
     
