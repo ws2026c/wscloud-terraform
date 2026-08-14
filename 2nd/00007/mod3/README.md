@@ -13,6 +13,7 @@
         - (키) CriticalAddonsOnly (값) true
         - (CoreDNS 같은 에드온도 배치할 수 있는 특정 테인트를 사용하는 것)
         - 노드 이름 지정을 위해 시작 템플릿 사용 및 응답 홉 제한 2 설정
+        - Amazon Linux 2023 사용 권장
 4. ECR 생성
     - 아래 Dockerfile 참조 or 배포된 Dockerfile 활용
     - app.py와 requirements.txt 모두 업로드 / 권한 부여 후 빌드
