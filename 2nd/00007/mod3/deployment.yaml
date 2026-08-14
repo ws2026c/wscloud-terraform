@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-processor
+  namespace: skillsmkt
+  labels:
+    app: order-processor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-processor
+  template:
+    metadata:
+      labels:
+        app: order-processor
+    spec:
+      containers:
+      - name: order-processor
+        image: 000000000000.dkr.ecr.ap-northeast-2.amazonaws.com/order-processor:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: AWS_REGION
+          value: "ap-northeast-2"
+        - name: SQS_QUEUE_URL
+          value: "https://sqs.ap-northeast-2.amazonaws.com/000000000000/skm-order-queue"
+        - name: PROCESSING_TIME
+          value: "3"
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+      nodeSelector:
+        nodepool: skm-app-nodepool
+      tolerations:
+      - key: "node"
+        operator: Equal
+        value: "app"
+        effect: NoSchedule
