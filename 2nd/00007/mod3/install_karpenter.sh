@@ -4,7 +4,7 @@ export K8S_VERSION=$(kubectl version -o json | jq -r '.serverVersion | "\(.major
 export AWS_PARTITION="aws"
 export TEMPOUT="$(mktemp)"
 curl -fsSL "https://raw.githubusercontent.com/aws/karpenter-provider-aws/v${KARPENTER_VERSION}/website/content/en/preview/getting-started/getting-started-with-karpenter/cloudformation.yaml" > "${TEMPOUT}"
-eksctl utils associate-iam-oidc-provider --region=ap-northeast-2 --cluster=skm-eks-cluster --approve
+
 aws cloudformation deploy \
   --stack-name "Karpenter-${CLUSTER_NAME}" \
   --template-file "${TEMPOUT}" \
