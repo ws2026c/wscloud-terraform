@@ -1,0 +1,20 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-scaler
+  namespace: skillsmkt
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: order-processor
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  cooldownPeriod: 10
+  pollingInterval: 5
+  triggers:
+  - type: aws-sqs-queue
+    metadata:
+      queueURL: https://sqs.ap-northeast-2.amazonaws.com/000000000000/skm-order-queue
+      queueLength: "5"
+      awsRegion: "ap-northeast-2"
+      identityOwner: operator
