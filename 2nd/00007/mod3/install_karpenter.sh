@@ -42,5 +42,5 @@ helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter \
   --set "priorityClassName=system-cluster-critical" \
   --set "tolerations[0].key=CriticalAddonsOnly" \
   --set "tolerations[0].operator=Exists" \
-  --set "tolerations[0].effect=NoSchedule"
+  --set "tolerations[0].effect=NoSchedule" \
   --wait
