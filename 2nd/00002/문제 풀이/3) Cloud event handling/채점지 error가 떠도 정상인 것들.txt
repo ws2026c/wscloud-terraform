@@ -1,0 +1,50 @@
+3-1
+과제지에서는 Rule을
+wsc2026-sg-change-rule
+wsc2026-role-change-rule
+wsc2026-ec2-terminate-rule
+wsc2026-ec2-type-change-rule
+네 개지만
+
+채점지에서는 Rule을
+wsc2026-ec2-terminate-alert -> 정상
+wsc2026-sg-remediation -> 정상
+wsc2026-tag-alert -> 채점지 오류
+wsc2026-ec2-stop-remediation -> 채점지 오류
+error 두개가 뜨는 것이 정상
+질의 상 수정될 것
+
+README.md의 추가 구성(채점지에 맞춰서)을 통해 구축 가능
+
+3-2
+이 역시 3-1과 마찬가지로
+wsc2026-ec2-stop-rule이 없기에 발생한 에러 -> 채점지 오류
+질의 상 수정될 것
+
+README.md의 추가 구성(채점지에 맞춰서)을 통해 구축 가능
+
+3-3의 경우에는
+문제지에서는 aws config의 제작이 포함되지 않
+질의상 문제지에 aws config 제작이 포함될 것
+
+README.md의 추가 구성(채점지에 맞춰서)에서 구축 가능
+
+3-4의 경우에는
+wsc2026-ec2-stop-remediation이 없기 때문에 틀릴 수 밖에 없는 문제로 이 또한 문제, 채점지 오류
+
+README.md의 추가 구성(채점지에 맞춰서)을 통해 구축 가능
+
+3-5의 경우에는
+문제지에서는 aws config의 제작이 포함되지 않았지만
+질의상 문제지에 aws config 제작이 포함될 것
+
+README.md의 추가 구성(채점지에 맞춰서)을 통해 구축 가능
+
+---
+
+추가 구성을 하지 않고 채점지를 작동시킨 뒤, 추가 구성을 하고 채점을 다시 하게 될 시에는 
+ec2의 보안그룹의 인바운드 규칙을 삭제, 중지되어있는 인스턴스를 다시 시작해줘야함
+
+채점스크립트 전체 다시 실행
+
+3-4의 경우에는 채점지 실행에서 stop 상태가 출력 될 수도 있음 -> 이 경우 인바운드 카운트가 0일 시엔 채점지 재 실행
