@@ -1,0 +1,11 @@
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: o11y-app-tgb
+  namespace: o11y
+spec:
+  serviceRef:
+    name: log-generator-svc
+    port: 8080
+  targetGroupARN: <대상 그룹 ARN>
+  targetType: ip
