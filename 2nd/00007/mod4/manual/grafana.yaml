@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: o11y-grafana
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: o11y-grafana
+  template:
+    metadata:
+      labels:
+        app: o11y-grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:13.0.6
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_SECURITY_ADMIN_USER
+          value: "skills<선수등번호>"
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: "GoodJob!Skills<선수등번호>^^"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: o11y-grafana
+  namespace: monitoring
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    app: o11y-grafana
+---
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: o11y-grafana-tgb
+  namespace: monitoring
+spec:
+  serviceRef:
+    name: o11y-grafana
+    port: 3000
+  targetGroupARN: <대상그룹 ARN>
+  targetType: ip
