@@ -1,5 +1,8 @@
-data "aws_prefix_list" "vpclattice" {
-  name = "com.amazonaws.ap-northeast-1.vpc-lattice"
+data "aws_ec2_managed_prefix_lists" "vpclattice" {
+  filter {
+    name   = "prefix-list-name"
+    values = ["com.amazonaws.ap-northeast-1.vpc-lattice"]
+  }
 }
 
 data "aws_ami" "amazon_linux_2023" {
@@ -90,7 +93,7 @@ resource "aws_security_group" "service_sg" {
     from_port       = 8080
     to_port         = 8080
     protocol        = "tcp"
-    prefix_list_ids = [data.aws_prefix_list.vpclattice.id]
+    prefix_list_ids = data.aws_ec2_managed_prefix_lists.vpclattice.ids
   }
 
   egress {
