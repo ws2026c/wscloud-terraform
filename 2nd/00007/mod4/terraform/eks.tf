@@ -1,6 +1,10 @@
 resource "aws_launch_template" "node_lt" {
   name_prefix = "o11y-node-lt-"
-
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 2
+  }
   user_data = base64encode(<<-EOF
 MIME-Version: 1.0
 Content-Type: multipart/mixed; boundary="==MYBOUNDARY=="
