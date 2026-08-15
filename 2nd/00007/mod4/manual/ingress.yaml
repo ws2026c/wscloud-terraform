@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: o11y-app-ingress
+  namespace: o11y
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: o11y-app-alb
+    alb.ingress.kubernetes.io/target-group-attributes: load_balancing.algorithm.type=round_robin
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/scheme: internet-facing
+spec:
+  ingressClassName: alb
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: log-generator-svc
+            port:
+              number: 8080
