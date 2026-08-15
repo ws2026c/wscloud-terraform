@@ -25,3 +25,25 @@
 5. `o11y`와 `monitoring` Namespace 생성
 6. AWS Load Balancer Controller 설치
 7. 각 파일 및 설치 스크립트를 참고하여 배포 (순서 : deployment -> service -> tgb -> loki 설치 -> otel 설치 -> grafana 설치)
+   - Data Sources에서 Loki 선택 후 URL을 http://o11y-loki.monitoring.svc.cluster.local:3100 로 설정
+8. 반드시 대시보드 이름 및 패널 이름, 배치 및 범례를 문제지와 같게 설정
+예시 쿼리
+```bash
+sum by (level) (
+  count_over_time(
+    {k8s_namespace_name="o11y"}
+    | json
+    | __error__ = "" [$__interval]
+  )
+)
+```
+
+```bash
+sum by (level) (
+  count_over_time(
+    {k8s_namespace_name="o11y"}
+    | json
+    | __error__ = "" [$__range]
+  )
+)
+```
