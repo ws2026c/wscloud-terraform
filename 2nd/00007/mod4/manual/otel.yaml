@@ -37,6 +37,7 @@ data:
       filelog:
         include: [/var/log/pods/*/*/*.log]
         exclude: [/var/log/pods/monitoring_*/*/*.log]
+        include_file_path: true
         operators:
           - type: container
     processors:
