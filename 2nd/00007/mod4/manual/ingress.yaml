@@ -8,6 +8,7 @@ metadata:
     alb.ingress.kubernetes.io/target-group-attributes: load_balancing.algorithm.type=round_robin
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
 spec:
   ingressClassName: alb
   rules:
