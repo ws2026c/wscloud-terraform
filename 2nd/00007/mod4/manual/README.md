@@ -17,4 +17,11 @@
    ```
 3. Dockerfile 참고하여 자유롭게 ECR에 Push
 4. `o11y`와 `monitoring` Namespace 생성
-5. 각 파일 및 설치 스크립트를 참고하여 배포 (순서 : deployment -> )
+5. AWS Load Balancer Controller 설치
+6. 각 파일 및 설치 스크립트를 참고하여 배포 (순서 : deployment -> service -> ingress -> loki 설치 -> otel 설치 -> grafana 설치)
+   - Loki 설치는 `loki-values.yaml` 저장 후 아래 명령어로 설정
+     ```bash
+      helm repo add grafana https://grafana.github.io/helm-charts
+      helm repo update
+      helm install o11y-loki grafana/loki -n monitoring -f loki-values.yaml
+     ```
