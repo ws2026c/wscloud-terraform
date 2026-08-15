@@ -16,12 +16,12 @@
     --==MYBOUNDARY==--
    ```
 3. Dockerfile 참고하여 자유롭게 ECR에 Push
-4. `o11y`와 `monitoring` Namespace 생성
-5. AWS Load Balancer Controller 설치
-6. 각 파일 및 설치 스크립트를 참고하여 배포 (순서 : deployment -> service -> ingress -> loki 설치 -> otel 설치 -> grafana 설치)
-   - Loki 설치는 `loki-values.yaml` 저장 후 아래 명령어로 설정
-     ```bash
-      helm repo add grafana https://grafana.github.io/helm-charts
-      helm repo update
-      helm install o11y-loki grafana/loki -n monitoring -f loki-values.yaml
-     ```
+4. 대상그룹 이름이 필요하므로 Target Group Binding 방식 필요
+   - o11y-app-tg는 8080, o11y-grafana-tg는 3000
+   - 대상 그룹 유형은 모두 IP
+   - o11y-app-tg의 상태 검사 경로는 /healthz이며 o11y-grafana-tg는 /api/health 경로
+   - ALB에서 들어오는 3000, 8080 포트를 보안그룹에서 열어줄 필요가 있음
+   - tgb.yaml과 grafana.yaml의 대상그룹 ARN을 적용시켜야함.
+5. `o11y`와 `monitoring` Namespace 생성
+6. AWS Load Balancer Controller 설치
+7. 각 파일 및 설치 스크립트를 참고하여 배포 (순서 : deployment -> service -> tgb -> loki 설치 -> otel 설치 -> grafana 설치)
