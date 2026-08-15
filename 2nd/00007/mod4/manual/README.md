@@ -15,5 +15,6 @@
     
     --==MYBOUNDARY==--
    ```
+3. Dockerfile 참고하여 자유롭게 ECR에 Push
 4. `o11y`와 `monitoring` Namespace 생성
-5. 각 Yaml 배포 (순서 : deployment ->
+5. 각 파일 및 설치 스크립트를 참고하여 배포 (순서 : deployment -> )
