@@ -18,6 +18,6 @@
     - Bottle Rocket이나 Amazon Linux 2023 사용
 - EKS 앱 배포 : 앱 배포는 IRSA(IAM Role for Service Account) 생성 후 진행 Secret -> Deployment -> Service -> Ingress 순
 - Lambda 함수의 권한은 kms:Decrypt 및 dynamodb:Query임. 또한 채점지에 명시되지 않은 TABLE_NAME에 DynamoDB의 테이블 명 주입
-- Grafana 설치는 monitoring.sh의 쉘 명령으로 values.yaml과 함께 설치 (values.yaml에서 비번호 변경 필요)
+- Grafana 설치는 monitoring.sh의 쉘 명령으로 values.yaml과 함께 설치 (values.yaml에서 비번호 변경 필요) grafana-service와 grafana-ingress 적용하여 ALB 생성
 -  Grafana의 경우 예상 지표는 container_cpu_usage_seconds_total, container_memory_working_set_bytes, kube_pod_container_status_running, kube_pod_container_status_restarts_total, container_network_receive_bytes_total
   - legend를 {{pod}} 로 바꾸고, Label Filter를 네임스페이스 명으로 바꾸는 것을 권장
