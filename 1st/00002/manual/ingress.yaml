@@ -1,0 +1,105 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wskorea26-book-ingress
+  namespace: wskorea26
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: wskorea26-book-alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/actions.response-403: >
+      {
+        "type": "fixed-response",
+        "fixedResponseConfig": {
+          "contentType": "text/plain",
+          "statusCode": "403",
+          "messageBody": "403 Forbidden"
+        }
+      }
+    alb.ingress.kubernetes.io/actions.forward-lambda: >
+      {
+        "type": "forward",
+        "targetGroupARN": "arn:aws:elasticloadbalancing:ap-northeast-2:000000000000:targetgroup/wskorea26-lambda-tg/0000000000000000"
+      }
+    alb.ingress.kubernetes.io/conditions.book-svc: >
+      [
+        {
+          "field": "http-method",
+          "httpMethodConfig": { "values": ["POST"] }
+        },
+        {
+          "field": "http-header",
+          "httpHeaderConfig": {
+            "httpHeaderName": "X-Origin-Verify",
+            "values": ["wskorea26-cf"]
+          }
+        }
+      ]
+    alb.ingress.kubernetes.io/conditions.forward-lambda: >
+      [
+        {
+          "field": "http-method",
+          "httpMethodConfig": { "values": ["GET"] }
+        },
+        {
+          "field": "http-header",
+          "httpHeaderConfig": {
+            "httpHeaderName": "X-Origin-Verify",
+            "values": ["wskorea26-cf"]
+          }
+        }
+      ]
+    alb.ingress.kubernetes.io/transforms.book-svc: >
+      [
+        {
+          "type": "url-rewrite",
+          "urlRewriteConfig": {
+            "rewrites": [
+              {
+                "regex": "^/book$",
+                "replace": "/v1/book"
+              }
+            ]
+          }
+        }
+      ]
+    alb.ingress.kubernetes.io/transforms.forward-lambda: >
+      [
+        {
+          "type": "url-rewrite",
+          "urlRewriteConfig": {
+            "rewrites": [
+              {
+                "regex": "^/book(.*)$",
+                "replace": "/reserv_query$1"
+              }
+            ]
+          }
+        }
+      ]
+spec:
+  ingressClassName: alb
+  defaultBackend:
+    service:
+      name: response-403
+      port:
+        name: use-annotation
+  rules:
+    - http:
+        paths:
+          - path: /book
+            pathType: Exact
+            backend:
+              service:
+                name: book-svc
+                port:
+                  number: 8080
+          - path: /book
+            pathType: Prefix
+            backend:
+              service:
+                name: forward-lambda
+                port:
+                  name: use-annotation

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book
+  namespace: wskorea26
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: book
+  template:
+    metadata:
+      labels:
+        app: book
+    spec:
+      terminationGracePeriodSeconds: 60
+      serviceAccountName: wskorea26-sa
+      nodeSelector:
+        node-type: app
+      tolerations:
+      - key: node-type
+        operator: Equal
+        value: app
+        effect: NoSchedule
+      containers:
+      - name: wskorea26-book-repo
+        image: 000000000000.dkr.ecr.ap-northeast-2.amazonaws.com/wskorea26-book-repo:stable
+        env:
+        - name: TABLE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: book-secret
+              key: TABLE_NAME
+        - name: AWS_REGION
+          valueFrom:
+            secretKeyRef:
+              name: book-secret
+              key: AWS_REGION
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 250m
+            memory: 512Mi
+        ports:
+        - containerPort: 8080
+      topologySpreadConstraints:
+      - maxSkew: 1
+        minDomains: 2
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: book
