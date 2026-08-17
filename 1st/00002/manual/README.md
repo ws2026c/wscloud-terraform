@@ -20,5 +20,6 @@
         - 메타데이터 응답 홉 제한 2 이상
     - Bottle Rocket이나 Amazon Linux 2023 사용
 - EKS 앱 배포 : 앱 배포는 IRSA(IAM Role for Service Account) 생성 후 진행 Secret -> Deployment -> Service -> Ingress 순이며
-- Grafana의 경우 예상 지표는 container_cpu_usage_seconds_total, container_memory_working_set_bytes, kube_pod_container_status_running, kube_pod_container_status_restarts_total, container_network_receive_bytes_total
+- Grafana 설치는 monitoring.sh의 쉘 명령으로 values.yaml과 함께 설치
+-  Grafana의 경우 예상 지표는 container_cpu_usage_seconds_total, container_memory_working_set_bytes, kube_pod_container_status_running, kube_pod_container_status_restarts_total, container_network_receive_bytes_total
   - legend를 {{pod}} 로 바꾸고, Label Filter를 네임스페이스 명으로 바꾸는 것을 권장
