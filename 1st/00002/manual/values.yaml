@@ -1,0 +1,25 @@
+defaultRules:
+  create: true
+
+nodeExporter:
+  userTemplate: {}
+
+prometheus-node-exporter:
+  nodeSelector:
+    node-type: addon
+
+kube-state-metrics:
+  nodeSelector:
+    node-type: addon
+
+prometheus:
+  prometheusSpec:
+    nodeSelector:
+      node-type: addon
+
+grafana:
+  nodeSelector:
+    node-type: addon
+  
+  adminUser: "skills-125-admin"
+  adminPassword: '\$korea26!!'
