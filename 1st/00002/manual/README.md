@@ -7,29 +7,18 @@
 
 - ECR 유의사항
     - KMS 관리형 키 또는 KMS CMK 사용
-    - Dockerfile
-        ```Docker
-        FROM alpine:latest
-
-        EXPOSE 8080
-
-        COPY book .
-
-        RUN chmod +x book
-
-        CMD ["./book"]
-        ```
-- NoSQL Database 요구사항 추가
-    - GSI Name / PK,SK : concert_name-created_at-index / concert_name(PK), created_at(SK) 조건 추가
 
 - EKS 설정 방법
     - 사전에 생성한 `wskorea26-vpc-environment-sg` 보안그룹의 443 인바운드를 허용하는 추가 보안 그룹 생성
     - KMS 암호화 방법 : 봉투 암호화 활성화
-    - 추가 기능 : CoreDNS, Kube-Proxy, VPC CNI
+    
+
+- EKS 노드 그룹 설정
+    - App 노드그룹에는 반드시 테인트 설정 (테인트 키:값은 레이블과 동일)
     - 시작 템플릿 
         - 리소스 태그(Name) 설정
         - 메타데이터 응답 홉 제한 2 이상
     - Bottle Rocket이나 Amazon Linux 2023 사용
-
-- EKS 노드 그룹 설정
-    - App
+- EKS 앱 배포 : 앱 배포는 IRSA(IAM Role for Service Account) 생성 후 진행 Secret -> Deployment -> Service -> Ingress 순이며
+- Grafana의 경우 예상 지표는 container_cpu_usage_seconds_total, container_memory_working_set_bytes, kube_pod_container_status_running, kube_pod_container_status_restarts_total, container_network_receive_bytes_total
+  - legend를 {{pod}} 로 바꾸고, Label Filter를 네임스페이스 명으로 바꾸는 것을 권장
