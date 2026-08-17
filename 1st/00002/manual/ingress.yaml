@@ -21,7 +21,7 @@ metadata:
     alb.ingress.kubernetes.io/actions.forward-lambda: >
       {
         "type": "forward",
-        "targetGroupARN": "arn:aws:elasticloadbalancing:ap-northeast-2:000000000000:targetgroup/wskorea26-lambda-tg/0000000000000000"
+        "targetGroupARN": "<Lambda 대상 그룹 ARN>"
       }
     alb.ingress.kubernetes.io/conditions.book-svc: >
       [
