@@ -26,8 +26,8 @@ metadata:
     alb.ingress.kubernetes.io/conditions.book-svc: >
       [
         {
-          "field": "http-method",
-          "httpMethodConfig": { "values": ["POST"] }
+          "field": "http-request-method",
+          "httpRequestMethodConfig": { "values": ["POST"] }
         },
         {
           "field": "http-header",
@@ -40,8 +40,8 @@ metadata:
     alb.ingress.kubernetes.io/conditions.forward-lambda: >
       [
         {
-          "field": "http-method",
-          "httpMethodConfig": { "values": ["GET"] }
+          "field": "http-request-method",
+          "httpRequestMethodConfig": { "values": ["GET"] }
         },
         {
           "field": "http-header",
