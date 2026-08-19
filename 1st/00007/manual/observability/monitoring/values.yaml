@@ -1,0 +1,24 @@
+prometheus:
+  prometheusSpec:
+    nodeSelector:
+      unicorn: addon
+    scrapeInterval: 15s
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+
+grafana:
+  nodeSelector:
+    unicorn: addon
+  adminUser: "skills<선수등번호>"
+  adminPassword: "HelloKrSkills!<선수등번호>@"
+  service:
+    type: NodePort
+
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeProxy:
+  enabled: false

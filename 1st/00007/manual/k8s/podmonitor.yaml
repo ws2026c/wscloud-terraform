@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: unicorn-book-app-pm
+  namespace: unicorn 
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: unicorn-book-app
+  podMetricsEndpoints:
+  - targetPort: 8080
+    path: /metrics
+    interval: 10s

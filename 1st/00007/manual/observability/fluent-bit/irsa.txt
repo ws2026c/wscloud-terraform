@@ -1,0 +1,26 @@
+aws iam create-policy \
+  --policy-name unicorn-fluentbit-policy \
+  --policy-document '{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams",
+          "logs:DescribeLogGroups"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }'
+  
+ eksctl create iamserviceaccount \
+  --cluster=unicorn-eks-cluster \
+  --namespace=amazon-cloudwatch \
+  --name=fluent-bit \
+  --attach-policy-arn=arn:aws:iam::<계정ID>:policy/unicorn-fluentbit-policy \
+  --override-existing-serviceaccounts \
+  --approve

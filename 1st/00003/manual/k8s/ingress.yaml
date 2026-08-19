@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wsc2026-book-ingress
+  namespace: wsc2026
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: wsc2026-app-alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/security-groups: sg-030f9f4d8dda4f647
+    alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/target-node-labels: wsc2026/node=application
+    
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+
+    alb.ingress.kubernetes.io/actions.response-403: '{"type":"fixed-response","fixedResponseConfig":{"contentType":"text/plain","statusCode":"403","messageBody":"403 Forbidden"}}'
+    alb.ingress.kubernetes.io/transforms.wsc2026-book-svc: >
+      [
+        {
+          "type": "url-rewrite",
+          "urlRewriteConfig": {
+            "rewrites": [
+              {
+                "regex": "^/booking$",
+                "replace": "/v1/book"
+              }
+            ]
+          }
+        }
+      ]
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /booking
+            pathType: Exact
+            backend:
+              service:
+                name: wsc2026-book-svc
+                port:
+                  number: 8080
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: response-403
+                port:
+                  name: use-annotation

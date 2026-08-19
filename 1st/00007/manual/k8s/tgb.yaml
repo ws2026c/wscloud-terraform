@@ -1,0 +1,11 @@
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: unicorn-tgb
+  namespace: unicorn
+spec:
+  serviceRef:
+    name: unicorn-book-app-svc
+    port: 8080
+  targetType: ip
+  targetGroupARN: <대상그룹 ARN>

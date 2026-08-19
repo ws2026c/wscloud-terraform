@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-config
+  namespace: amazon-cloudwatch
+  labels:
+    k8s-app: fluent-bit
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Flush         3
+        Log_Level     info
+        Daemon        off
+        Parsers_File  parsers.conf
+        HTTP_Server   On
+        HTTP_Listen   0.0.0.0
+        HTTP_Port     2020
+
+    @INCLUDE application-log.conf
+
+  application-log.conf: |
+    [INPUT]
+        Name                tail
+        Tag                 application.*
+        Path                /var/log/containers/*unicorn*.log
+        Parser              cri
+        DB                  /var/log/flb_kube.db
+        Mem_Buf_Limit       50MB
+        Skip_Long_Lines     On
+        Refresh_Interval    2
+
+    [FILTER]
+        Name                parser
+        Match               application.*
+        Key_Name            log
+        Parser              book_app_parser
+        Reserve_Data        True
+
+    [FILTER]
+        Name                grep
+        Match               application.*
+        Exclude             path /health
+
+    [FILTER]
+        Name                lua
+        Match               application.*
+        Script              reorder.lua
+        Call                reorder_fields
+
+    [OUTPUT]
+        Name                cloudwatch_logs
+        Match               application.*
+        region              ap-northeast-2
+        log_group_name      /unicorn/eks/book-app
+        log_stream_prefix   fluentbit-
+        auto_create_group   true
+        extra_user_agent    container-insights
+        log_key             log
+
+  parsers.conf: |
+    [PARSER]
+        Name        cri
+        Format      regex
+        Regex       ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
+
+    [PARSER]
+        Name        book_app_parser
+        Format      regex
+        Regex       access method=(?<method>[^ ]+) path=(?<path>[^ ]+) status=(?<status_code>\d+) duration=[^ ]+ remote_addr=(?<client_ip>[^:]+):.*$
+        Types       status_code:integer
+
+  reorder.lua: |
+    function reorder_fields(tag, timestamp, record)
+        local time_val = record["time"] or ""
+        local method_val = record["method"] or ""
+        local path_val = record["path"] or ""
+        local status_val = record["status_code"] or 0
+        local ip_val = record["client_ip"] or ""
+
+        local json_str = string.format(
+            '{"timestamp":"%s","method":"%s","path":"%s","status_code":%d,"client_ip":"%s"}',
+            time_val, method_val, path_val, status_val, ip_val
+        )
+
+        local new_record = {}
+        new_record["log"] = json_str
+
+        return 1, timestamp, new_record
+    end

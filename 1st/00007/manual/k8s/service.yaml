@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: unicorn-book-app-svc
+  namespace: unicorn
+  labels:
+    app: unicorn-book-app
+spec:
+  type: ClusterIP
+  selector:
+    app: unicorn-book-app
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080

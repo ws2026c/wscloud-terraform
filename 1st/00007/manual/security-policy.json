@@ -1,0 +1,39 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DynamoDBReadAccess",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:DescribeTable"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:ap-northeast-2:<계정ID>:table/unicorn-concert-db",
+        "arn:aws:dynamodb:ap-northeast-2:<계정ID>:table/unicorn-concert-db/index/client-id-created-at-index"
+      ]
+    },
+    {
+      "Sid": "VPCDescribeAccess",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeVpcs",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeRouteTables",
+        "ec2:DescribeInternetGateways",
+        "ec2:DescribeNatGateways"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "EKSDescribeAccess",
+      "Effect": "Allow",
+      "Action": [
+        "eks:DescribeCluster",
+        "eks:DescribeNodegroup"
+      ],
+      "Resource": "arn:aws:eks:ap-northeast-2:<계정ID>:cluster/unicorn-eks-cluster"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unicorn-book-app-deploy
+  namespace: unicorn
+  labels:
+    app: unicorn-book-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: unicorn-book-app
+  template:
+    metadata:
+      labels:
+        app: unicorn-book-app
+    spec:
+      serviceAccountName: unicorn-book-app-sa
+      nodeSelector:
+        unicorn: app
+      tolerations:
+      - key: "unicorn"
+        operator: "Equal"
+        value: "app"
+        effect: "NoSchedule"
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: unicorn-book-app
+        image: 000000000000.dkr.ecr.ap-northeast-2.amazonaws.com/unicorn-concert-app:v1.0.0
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: TZ
+          value: "Asia/Seoul"
+        envFrom:
+        - secretRef:
+            name: unicorn-secret
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 2
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 15"]
