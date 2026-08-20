@@ -26,7 +26,7 @@ mark-sg 보안 그룹 생성\
 
 3 Container Orchestration Node Role 미리 생성\
 사용 사례 EC2\
-Name : AmazonEKSNodeRole\
+Name : AmazonEKSNodeRole
 - AmazonEC2ContainerRegistryReadOnly
 - AmazonEKsWorkerNodePolicy
 - AmazonEKS_CNI_Policy
