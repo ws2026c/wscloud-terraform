@@ -1,5 +1,4 @@
 AdiminsistratorAccess 정책 가진 IAM 사용자 생성, 로그인 \
-mark-sg 보안 그룹 생성\
 
 1 lambda policy : DynamoDB에 대해 Query 허용\
 2 Deployment Pod Policy : DynamoDB에 대해 PutItem 허용
