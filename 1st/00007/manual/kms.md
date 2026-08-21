@@ -49,7 +49,6 @@ platform-kms
 			"Principal": {
 				"Service": [
 					"logs.amazonaws.com",
-					"lambda.amazonaws.com",
 					"eks.amazonaws.com",
 					"ec2.amazonaws.com"
 				]
@@ -62,6 +61,21 @@ platform-kms
 				"kms:DescribeKey"
 			],
 			"Resource": "*"
+		},
+		{
+			"Sid": "Statement2",
+			"Effect": "Allow",
+			"Action": [
+				"kms:Decrypt",
+				"kms:Encrypt",
+				"kms:GenerateDataKey*",
+				"dynamodb:Query",
+				"dynamodb:GetItem"
+				],
+			"Resource": "*",
+			"Principal": {
+				"Service": "lambda.amazonaws.com"
+			}
 		}
 ```
 
