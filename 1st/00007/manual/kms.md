@@ -121,3 +121,8 @@ node 역할 생성 후,
 	]
 }
 ```
+
+Lambda 함수 
+
+함수 정책에 kms:Decrypt, kms:Encrypt, kms:GenerateDataKey*, dynamodb:Query, dynamodb:GetItem 부여
+Platform KMS에 (”Service”: “lambda.amazonaws.com”) 를 대상으로 위와 같은 권한 부여
