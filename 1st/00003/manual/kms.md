@@ -1,5 +1,7 @@
-1. db-kms\
-wsc2026-book-function-role, wsc2026-book-pod-role에 다음 권한 부여
+모든 키의 키 관리자를 본인의 IAM 사용자로 지정
+
+1. wsc2026-db-kms
+wsc2026-book-function-role, wsc2026-book-pod-role를 Principal로 하여 다음 키 권한 부여
   ```json
 "kms:Encrypt",
 "kms:Decrypt",
@@ -7,13 +9,13 @@ wsc2026-book-function-role, wsc2026-book-pod-role에 다음 권한 부여
 "kms:GenerateDataKey*",
 "kms:DescribeKey"
 ```
-2. ecr-kms\
-AmazonEKSNodeRole에 다음 권한 부여
+2. wsc2026-ecr-kms
+AmazonEKSNodeRole를 Principal로 하여 다음 키 권한 부여
 ```json
 "kms:Decrypt",
 "kms:DescribeKey"
 ```
-3. eks-kms\
+3. wsc2026-eks-kms
 ```json
 {
 	"Version": "2012-10-17",
@@ -81,28 +83,35 @@ AmazonEKSNodeRole에 다음 권한 부여
 	]
 }
 ```
-4. s3-kms\
-키 관리자(유저)에 다음 권한도 추가 부여
-```json
-"kms:Decrypt",
-"kms:GenerateDataKey*"
-```
-"Service":"cloudfront.amazonaws.com"에 다음 권한 부여
-```json
-"kms:Decrypt"
-```
-5. lambda-kms \
-키 관리자(유저)에 다음 권한도 추가 부여
-```json
-"kms:Decrypt",
-"kms:GenerateDataKey*",
-"kms:Encrypt"
-```
-wsc2026-book-function-role 및 "Service":"lambda.amazonaws.com"에 다음 권한 부여
-```json
-"kms:Encrypt",
-"kms:Decrypt",
-"kms:GenerateDataKey*",
-"kms:DescribeKey"
-```
-
+4. wsc2026-bucket-kms
+	1. 키 관리자로 지정하여 기본 생성된 권한에 추가로 부여
+		```json
+		"kms:Decrypt",
+		"kms:GenerateDataKey*"
+		```
+	
+	2. "Service":"cloudfront.amazonaws.com"을 Principal로 하여 다음 권한 부여
+		```json
+		"kms:Decrypt"
+		```
+5. wsc2026-function-kms
+	1. 키 관리자로 지정하여 기본 생성된 권한에 추가로 부여
+		```json
+		"kms:Decrypt",
+		"kms:GenerateDataKey*",
+		"kms:Encrypt"
+		```
+	2. wsc2026-book-function-role을 Principal로 하여 다음 권한 부여
+		```json
+		"kms:Encrypt",
+		"kms:Decrypt",
+		"kms:GenerateDataKey*",
+		"kms:DescribeKey"
+		```
+	3. "Service":"lambda.amazonaws.com"를 Principal로 하여 다음 권한 부여
+		```json
+		"kms:Encrypt",
+		"kms:Decrypt",
+		"kms:GenerateDataKey*",
+		"kms:DescribeKey"
+		```
