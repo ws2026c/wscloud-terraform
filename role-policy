@@ -1,0 +1,47 @@
+lambda
+```json
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "Statement1",
+			"Effect": "Allow",
+			"Action": [
+				"dynamodb:GetItem",
+				"dynamodb:Query",
+				"dynamodb:PutItem",
+				"dynamodb:GetRecords",
+				"dynamodb:GetShardIterator",
+				"dynamodb:DescribeStream",
+				"dynamodb:ListStreams"
+			],
+			"Resource": [
+				"arn:aws:dynamodb:ap-southeast-1:<ACCOUNT_ID>:table/bigbae-nosql-*",
+        		"arn:aws:dynamodb:ap-southeast-1:<ACCOUNT_ID>:table/bigbae-nosql-*/stream/*",
+        		"arn:aws:dynamodb:ap-southeast-1:<ACCOUNT_ID>:table/bigbae-nosql-*/index/*"
+			]
+		}
+	]
+}
+```
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:Query",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:Scan"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:ap-southeast-1:<ACCOUNT_ID>:table/bigbae-nosql-*",
+        "arn:aws:dynamodb:ap-southeast-1:<ACCOUNT_ID>:table/bigbae-nosql-*/index/*"
+      ]
+    }
+  ]
+}
+```
