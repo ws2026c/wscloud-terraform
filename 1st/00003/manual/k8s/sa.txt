@@ -1,0 +1,7 @@
+kubectl create serviceaccount wsc2026-book-sa -n wsc2026
+
+aws eks create-pod-identity-association \
+  --cluster-name wsc2026-eks-cluster \
+  --namespace wsc2026 \
+  --service-account wsc2026-book-sa \
+  --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/wsc2026-book-pod-role
