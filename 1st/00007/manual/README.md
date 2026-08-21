@@ -5,11 +5,12 @@
 3. S3 생성 시 KMS 권한은 kms.md 참고하여 생성 및 객체 업로드
 4. ECR 생성 시 푸시할 때 스캔 활성화
 5. EKS 클러스터 생성
+   - 봉투 암호화 활성화 (쿠버네티스 내부가 자동으로 암호화 됨)
    - 추가 기능 : VPC CNI, CoreDNS, Kube-proxy, Pod Identity 에이전트 활성화
    - 인증 모드 : AWS API
    - 클러스터 역할 생성 시 기본 부여되는 AmazonEKSClusterPolicy 외에도 kms.md를 참고하여 권한 부여 (kms 정책 자체에서 부여해도 상관 없음)
    - 추가 보안그룹 인바운드는 CloudShell로 설정 (443)
-6. EKS 노드그룹
+7. EKS 노드그룹
    - 노드 그룹 역할 생성 시 기본 부여되는 4가지 정책 외에도 kms:Decrypt 부여
    - AMI는 반드시 Amazon Linux 2023으로 하며 t3.medium 사용 권장, 노드 그룹 및 시작 템플릿에 Name 태그 부여 및 메타데이터 응답 홉 제한은 2 이상 설정
    - 사용자 데이터 (개행이나 공백이 추가로 들어가지 않도록 유의)
@@ -25,9 +26,9 @@
     
    --==MYBOUNDARY==--
    ```
-7. SA.md를 참고하여 Service Account 생성
-8. k8s/ 폴더를 참고하여 secret -> deployment -> service 순으로 진행
-9. ALB 생성 (보안 그룹은 아예 막지않고 403을 띄우기 위해 0.0.0.0/0 반드시 허용) -> 로드밸런서 컨트롤러 설치 후 나머지 yaml 적용 -> Cluster 보안 그룹에 ALB로부터 들어오는 8080 허용)
+8. SA.md를 참고하여 Service Account 생성
+9. k8s/ 폴더를 참고하여 secret -> deployment -> service 순으로 진행
+10. ALB 생성 (보안 그룹은 아예 막지않고 403을 띄우기 위해 0.0.0.0/0 반드시 허용) -> 로드밸런서 컨트롤러 설치 후 나머지 yaml 적용 -> Cluster 보안 그룹에 ALB로부터 들어오는 8080 허용)
    - Lambda 전용 보안그룹은 임의로 생성
    - 조건 별로 분기 (경로가 /v1/book이며 메서드가 POST인 경우 unicorn-tg로, 경로가 /v1/book이며 메서드가 GET이라면 Lambda 전송, 경로가 /health라면 반드시 unicorn-tg로 전송, 기본값은 403)
 11. lambda_function.py를 참고하여 Lambda 생성, 코드와 환경변수 모두 암호화 (함수 권한과 KMS 권한은 kms.md 참고)
