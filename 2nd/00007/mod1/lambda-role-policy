@@ -1,0 +1,23 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "Statement1",
+			"Effect": "Allow",
+			"Action": [
+				"dynamodb:GetItem",
+				"dynamodb:Query",
+				"dynamodb:PutItem",
+				"dynamodb:GetRecords",
+				"dynamodb:GetShardIterator",
+				"dynamodb:DescribeStream",
+				"dynamodb:ListStreams"
+			],
+			"Resource": [
+				"arn:aws:dynamodb:ap-southeast-1:412869002243:table/bigbae-nosql-*",
+        		"arn:aws:dynamodb:ap-southeast-1:412869002243:table/bigbae-nosql-*/stream/*",
+        		"arn:aws:dynamodb:ap-southeast-1:412869002243:table/bigbae-nosql-*/index/*"
+			]
+		}
+	]
+}
