@@ -6,6 +6,7 @@
 4. ECR 생성 시 푸시할 때 스캔 활성화
 5. EKS 클러스터 생성
    - 추가 기능 : VPC CNI, CoreDNS, Kube-proxy, Pod Identity 에이전트 활성화
+   - 인증 모드 : AWS API
    - 클러스터 역할 생성 시 기본 부여되는 AmazonEKSClusterPolicy 외에도 kms.md를 참고하여 권한 부여 (kms 정책 자체에서 부여해도 상관 없음)
    - 추가 보안그룹 인바운드는 CloudShell로 설정 (443)
 6. EKS 노드그룹
