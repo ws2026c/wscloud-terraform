@@ -123,6 +123,39 @@ node 역할 생성 후,
 ```
 
 Lambda 함수 
+- 함수 정책에 kms:Decrypt, kms:Encrypt, kms:GenerateDataKey*, dynamodb:Query, dynamodb:GetItem 부여
+- Platform KMS에 (”Service”: “lambda.amazonaws.com”) 를 대상으로 위와 같은 권한 부여
 
-함수 정책에 kms:Decrypt, kms:Encrypt, kms:GenerateDataKey*, dynamodb:Query, dynamodb:GetItem 부여
-Platform KMS에 (”Service”: “lambda.amazonaws.com”) 를 대상으로 위와 같은 권한 부여
+WAF KMS 정책 (복제된 us-east-1에서 진행)
+```json
+{
+  "Version": "2012-10-17",
+  "Id": "key-consolepolicy-3",
+  "Statement": [
+    {
+      "Sid": "Enable IAM User Permissions",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<계정ID>:root"
+      },
+      "Action": "kms:*",
+      "Resource": "*"
+    },
+    {
+      "Sid": "ACL Permissions",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "logs.us-east-1.amazonaws.com"
+      },
+      "Action": [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
