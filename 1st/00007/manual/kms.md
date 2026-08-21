@@ -64,3 +64,32 @@ platform-kms
 			"Resource": "*"
 		}
 ```
+
+
+eks-cluster 역할 생성 후,
+```json
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "Statement1",
+			"Effect": "Allow",
+			"Action": [
+				"kms:GenerateDataKey*",
+				"kms:CreateGrant",
+				"kms:Decrypt",
+				"kms:DescribeKey",
+				"kms:Encrypt"
+			],
+			"Resource": [
+				"*"
+			]
+		}
+	]
+}
+```
+
+node 역할 생성 후,
+```json
+
+```
