@@ -34,8 +34,20 @@
 
 - K8S
   - sa.txt를 참고하여 서비스 어카운트 생성
-  - pdb -> configmap -> deployment -> service -> (로드밸런서 컨트롤러 설치 후) -> ingress 배포 (ALB 보안 그룹을 직접 만들어 security-groups: 에 직접 지정)
+  - 네임스페이스 생성 후 k8s/ 폴더를 참고해 pdb -> configmap -> deployment -> service -> (로드밸런서 컨트롤러 설치 후) -> ingress 배포 (ALB 보안 그룹을 직접 만들어 security-groups: 에 직접 지정)
   - 클러스터 보안 그룹에서 ALB로 들어오는 모든 TCP 인바운드를 허용
 
 - S3는 로컬에서 static/ 이라는 폴더를 만들어 파일을 전부 넣은 다음 S3에 업로드
-- 
+- Lambda는 KMS로 코드와 환경 변수 둘다 암호화
+    - 환경 변수 암호화 시 KMS 키 지정 및 전송 중 암호화 도우미를 활성화 하여 KMS 지정
+    - 함수 URL 생성
+    - 함수 코드는 lambda_function.py
+- CloudFront
+  - 생성 시 Pay as you go로 생성, WAF 비활성화, 원본 S3 지정
+  - 생성 이후 Lambda, ALB 원본을 추가로 생성(Lambda의 경우 Lambda URL을 붙여넣으면 됨)하며 Lambda는 HTTPS, ALB는 HTTP
+  - 기본값으로 생성된 S3의 원본 경로를 /static 으로 설정
+  - 동작에서 /v1/book* 경로는 Lambda로, /booking* 경로는 ALB로 설정. (S3는 기본값으로 이미 생성이 되어있으며, S3 외에는 전부 캐시 비활성화)
+  - ALB의 보안 그룹에는 관리형 접두사로 CloudFront만 접근 가능하게 설정
+  - WAF는 WAF 콘솔에서 별도로 생성하여 CloudFront와 직접 연결하며 관리형 규칙에서는 Core rule set, SQL 룰 적용 및 사용자 지정 규칙에서는 속도 기반 규칙으로 설정 후 문제지에 따라 설정 -> 조건 만족 시 403 반환
+
+- monitoring/ 과 grafana/ 참고하여 Observability 구성
