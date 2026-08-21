@@ -1,9 +1,12 @@
-# 00002 - 1과제
+### 00002
 
-과제지 순서대로 풀이 진행
+- wskorea26-vpc-environment-sg를 가진 CloudShell VPC Environment 생성
+
+- 
 
 - S3 유의 사항
-    - 채점 시 폴더 객체가 포함되지 않도록 로컬에서 미리 `web/main` 폴더를 생성하고 그 안에 정적 파일들을 넣어 한번에 업로드
+    - 로컬에서 미리 `web/main` 폴더를 생성하고 그 안에 파일들을 넣어 S3에 한번에 업로드 
+
 - ECR 유의사항
     - KMS 관리형 키 또는 KMS CMK 사용
 
