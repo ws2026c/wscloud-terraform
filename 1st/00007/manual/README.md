@@ -13,6 +13,7 @@
 7. EKS 노드그룹
    - 노드 그룹 역할 생성 시 기본 부여되는 4가지 정책 외에도 kms:Decrypt 부여
    - AMI는 반드시 Amazon Linux 2023으로 하며 t3.medium 사용 권장, 노드 그룹 및 시작 템플릿에 Name 태그 부여 및 메타데이터 응답 홉 제한은 2 이상 설정
+   - 앱 노드그룹에는 테인트 지정 ("unicorn":"app")
    - 사용자 데이터 (개행이나 공백이 추가로 들어가지 않도록 유의)
     ```bash
     MIME-Version: 1.0
@@ -41,3 +42,4 @@
 13. Security의 역할 구성의 경우 신뢰 관계를 AWS 계정 설정 후 외부 ID 필요 선택 후 지정된 외부 ID 입력 이후 권한 입력
     - 정책을 먼저 만들지 말고 인라인 정책으로 생성 (security-policy.json 참고)
 14. observability/ 폴더를 참고하여 Fluent-bit와 monitoring 구성 (Fluent-bit의 경우 irsa.txt로 서비스 어카운트를 생성)
+   - Grafana의 마지막 지표 결과가 누락될 경우 quantile(0.50, scrape_duration_seconds), quantile(0.95, scrape_duration_seconds), quantile(0.99, scrape_duration_seconds) 로 쿼리 변경
