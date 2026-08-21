@@ -13,7 +13,7 @@
 
 - EKS의 추가 보안 그룹은 mark-sg로부터 들어오는 443 인바운드 허용
   - 봉투 암호화 활성화
-  - 추가 기능 : CoreDNS, VPC CNI, kube-proxy, EKS Pod Identity Agent
+  - 추가 기능 : CoreDNS, VPC CNI, kube-proxy, EKS Pod Identity 에이전트
   - 인증 모드 : EKS API
   - 다음 명령으로 도메인 변경 후 저장
     ```bash
@@ -45,7 +45,7 @@
 - CloudFront
   - 생성 시 Pay as you go로 생성, WAF 비활성화, 원본 S3 지정
   - 생성 이후 Lambda, ALB 원본을 추가로 생성(Lambda의 경우 Lambda URL을 붙여넣으면 됨)하며 Lambda는 HTTPS, ALB는 HTTP
-  - 기본값으로 생성된 S3의 원본 경로를 /static 으로 설정
+  - 기본값으로 생성된 S3의 원본 경로를 /static 으로 설정, CloudFront 자체의 기본 루트 객체는 index.html
   - 동작에서 /v1/book* 경로는 Lambda로, /booking* 경로는 ALB로 설정. (S3는 기본값으로 이미 생성이 되어있으며, S3 외에는 전부 캐시 비활성화)
   - ALB의 보안 그룹에는 관리형 접두사로 CloudFront만 접근 가능하게 설정
   - WAF는 WAF 콘솔에서 별도로 생성하여 CloudFront와 직접 연결하며 관리형 규칙에서는 Core rule set, SQL 룰 적용 및 사용자 지정 규칙에서는 속도 기반 규칙으로 설정 후 문제지에 따라 설정 -> 조건 만족 시 403 반환
