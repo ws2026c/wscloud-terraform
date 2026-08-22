@@ -36,12 +36,12 @@
 11. lambda_function.py를 참고하여 Lambda 생성, 코드와 환경변수 모두 암호화 (함수 권한과 KMS 권한은 kms.md 참고)
    - 환경 변수 이름 : TABLE_NAME
 12. CloudFront 생성 시 WAF 옵션 비활성화 / 생성 시 원본 S3 지정
-    - S3에 자동으로 권한 (OAC 정책) 이 생성되는데, 그 정책에서 ArnLike를 StringEquals로 변경
+    - S3 콘솔에서 권한 탭에 가면 자동으로 권한 (OAC 정책) 이 생성되는데, 그 정책에서 ArnLike를 StringEquals로 변경
     - ALB 원본을 직접 연결하지않고 CloudFront의 VPC Origin을 생성하여 생성 (원본 포트는 80)
     - 최종적으로 원본은 S3와 VPC Origin이 되어야하며, S3 동작은 기본값, VPC Origin(ALB) 동작은 /v1/book* 이여야 함 (S3만 캐싱 활성화)
     - comment(설명)도 CloudFront의 이름으로 지정하며, 기본 루트 객체는 index.html 
     - WAF는 us-east-1 리전에서 생성하며 CloudFront와 별도로 연결하고, 관리형 규칙 그룹에서 Core rule set과 KnownBadInputs 을 연결하고 사용자 지정 규칙에서 속도 기반 정책으로 unicorn-rate-limit 생성
-      - 차단 시 응답은 Request blocked by Unicorn WAF임. (HTTP 403은 응답 본문이 아님에 주의!)
+      - 차단 시 응답은 Request blocked by Unicorn WAF임. (HTTP 403은 응답 본문에 포함되지 않음에 주의!)
 13. Security의 역할 구성의 경우 신뢰 관계를 AWS 계정 설정 후 외부 ID 필요 선택 후 지정된 외부 ID 입력 이후 권한 입력
     - 정책을 먼저 만들지 말고 인라인 정책으로 생성 (security-policy.json 참고)
 14. observability/ 폴더를 참고하여 Fluent-bit와 monitoring 구성 (Fluent-bit의 경우 irsa.txt로 서비스 어카운트를 생성)
