@@ -35,6 +35,7 @@
    - 조건 별로 분기 (경로가 /v1/book이며 메서드가 POST인 경우 unicorn-tg로, 경로가 /v1/book이며 메서드가 GET이라면 Lambda 전송, 경로가 /health라면 반드시 unicorn-tg로 전송, 기본값은 403)
 11. lambda_function.py를 참고하여 Lambda 생성, 코드와 환경변수 모두 암호화 (함수 권한과 KMS 권한은 kms.md 참고)
    - 환경 변수 이름 : TABLE_NAME
+   - lambda 구성, 모니터링 및 운영도구에서 로그대상 사용자 지정으로 요구사항대로 바꿔주기
 12. CloudFront 생성 시 WAF 옵션 비활성화 / 생성 시 원본 S3 지정
     - S3 콘솔에서 권한 탭에 가면 자동으로 권한 (OAC 정책) 이 생성되는데, 그 정책에서 ArnLike를 StringEquals로 변경
     - ALB 원본을 직접 연결하지않고 CloudFront의 VPC Origin을 생성하여 생성 (원본 포트는 80)
