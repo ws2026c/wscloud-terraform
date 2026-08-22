@@ -41,6 +41,12 @@ aws iam attach-role-policy \
   --policy-arn "arn:aws:iam::$AWS_ACCOUNT_ID:policy/<정책이름>"
 ```
 
+service accout 생성
+```bash
+kubectl create serviceaccount unicorn-book-app-sa -n unicorn
+```
+
+
 Pod Identity 연결
 ```bash
 aws eks create-pod-identity-association \
