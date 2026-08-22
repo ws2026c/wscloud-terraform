@@ -29,7 +29,8 @@
    ```
 8. SA.md를 참고하여 Service Account 생성
 9. 네임스페이스 생성 후 k8s/ 폴더를 참고하여 secret -> deployment -> service 순으로 진행
-10. ALB 생성 (보안 그룹은 아예 막지않고 403을 띄우기 위해 0.0.0.0/0 반드시 허용) -> 로드밸런서 컨트롤러 설치 후 나머지 yaml 적용 -> Cluster 보안 그룹에 ALB로부터 들어오는 8080 허용)
+    - **tgb.yaml은 ALB 생성 이후 적용하며, podmonitor.yaml은 Prometheus를 모두 설치 후 진행**
+11. ALB 생성 (보안 그룹은 아예 막지않고 403을 띄우기 위해 0.0.0.0/0 반드시 허용) -> 로드밸런서 컨트롤러 설치 후 tgb.yaml 적용 -> Cluster 보안 그룹에 ALB로부터 들어오는 8080 허용)
    - Lambda 전용 보안그룹은 임의로 생성
    - 조건 별로 분기 (경로가 /v1/book이며 메서드가 POST인 경우 unicorn-tg로, 경로가 /v1/book이며 메서드가 GET이라면 Lambda 전송, 경로가 /health라면 반드시 unicorn-tg로 전송, 기본값은 403)
 11. lambda_function.py를 참고하여 Lambda 생성, 코드와 환경변수 모두 암호화 (함수 권한과 KMS 권한은 kms.md 참고)
